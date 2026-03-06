@@ -1,0 +1,15 @@
+meta {
+  name: Get Info
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/server?fields=info
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{apiKey}}
+}

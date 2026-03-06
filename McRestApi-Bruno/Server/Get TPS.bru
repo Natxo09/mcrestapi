@@ -1,0 +1,15 @@
+meta {
+  name: Get TPS
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/server?fields=tps
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{apiKey}}
+}

@@ -1,0 +1,15 @@
+meta {
+  name: Get Memory
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/server?fields=memory
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{apiKey}}
+}

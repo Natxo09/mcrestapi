@@ -1,0 +1,15 @@
+meta {
+  name: Get Multiple Fields
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseUrl}}/api/server?fields=tps,memory,cpu
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{apiKey}}
+}

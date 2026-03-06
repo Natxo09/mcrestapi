@@ -1,0 +1,15 @@
+meta {
+  name: Get Players Count
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/api/server?fields=players
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{apiKey}}
+}

@@ -1,0 +1,25 @@
+{
+	"schemaVersion": 1,
+	"id": "mcrestapi",
+	"version": "${version}",
+	"name": "MCRestAPI",
+	"description": "REST API for monitoring and controlling Minecraft servers",
+	"authors": [
+		"natxo"
+	],
+	"contact": {},
+	"license": "MIT",
+	"icon": "assets/mcrestapi/icon.png",
+	"environment": "server",
+	"entrypoints": {
+		"server": [
+			"net.natxo.mcrestapi.MCRestAPI"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.18.4",
+		"minecraft": "~1.21.11",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}

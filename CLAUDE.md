@@ -1,0 +1,84 @@
+# MCRestAPI — Fabric Mod REST API for Minecraft
+
+## Project Overview
+
+Fabric mod for Minecraft 1.21.11 (dedicated server only) that exposes a REST API + WebSocket for monitoring and controlling Minecraft servers. Uses `com.sun.net.httpserver` from the JDK (zero external dependencies for HTTP).
+
+## Tech Stack
+
+| Component       | Version                    |
+|-----------------|----------------------------|
+| Minecraft       | 1.21.11                    |
+| Fabric Loader   | 0.18.4                     |
+| Fabric Loom     | 1.15-SNAPSHOT              |
+| Fabric API      | 0.141.3+1.21.11            |
+| Java            | 21                         |
+| Mappings        | Mojang official             |
+
+## Project Structure
+
+```
+src/main/java/net/natxo/mcrestapi/
+├── MCRestAPI.java              # Entrypoint (DedicatedServerModInitializer)
+├── config/
+│   └── ApiConfig.java          # JSON config loader (port, bind, API key)
+├── http/
+│   ├── ApiServer.java          # JDK HttpServer wrapper
+│   ├── HttpUtil.java           # JSON response helper
+│   ├── Router.java             # Route registration with auth
+│   ├── middleware/
+│   │   └── AuthMiddleware.java # Bearer token validation
+│   └── websocket/              # (Phase 3)
+├── endpoints/
+│   ├── ServerEndpoint.java     # GET /api/server (supports ?fields= filtering)
+│   └── PlayersEndpoint.java    # GET /api/players
+└── collectors/
+    ├── TpsCollector.java       # TPS/MSPT calculator via tick events
+    └── PlayerTracker.java      # Thread-safe player data snapshots
+```
+
+## Inspecting Minecraft API (Mojang Mappings)
+
+Since the project uses Mojang official mappings, you can inspect any Minecraft class using:
+
+```bash
+# Full class inspection
+javap -p -classpath .gradle/loom-cache/minecraftMaven/net/minecraft/minecraft-merged-6dd721cd7d/1.21.11-loom.mappings.1_21_11.layered+hash.2198-v2/minecraft-merged-6dd721cd7d-1.21.11-loom.mappings.1_21_11.layered+hash.2198-v2.jar <fully.qualified.ClassName>
+
+# Search for specific methods
+javap -p -classpath .gradle/loom-cache/minecraftMaven/net/minecraft/minecraft-merged-6dd721cd7d/1.21.11-loom.mappings.1_21_11.layered+hash.2198-v2/minecraft-merged-6dd721cd7d-1.21.11-loom.mappings.1_21_11.layered+hash.2198-v2.jar <ClassName> 2>&1 | grep -i "methodName"
+
+# List classes in the jar
+jar tf .gradle/loom-cache/minecraftMaven/net/minecraft/minecraft-merged-6dd721cd7d/1.21.11-loom.mappings.1_21_11.layered+hash.2198-v2/minecraft-merged-6dd721cd7d-1.21.11-loom.mappings.1_21_11.layered+hash.2198-v2.jar | grep -i "ClassName"
+
+# Authlib (GameProfile, etc.) — uses record-style accessors (name() not getName())
+javap -p -classpath ~/.gradle/caches/modules-2/files-2.1/com.mojang/authlib/7.0.61/efee1e6b54e863108576eb3b3ae71144626aaefc/authlib-7.0.61.jar <ClassName>
+```
+
+### Key API differences in 1.21.11 Mojang Mappings
+
+- `GameProfile.name()` not `getName()` (authlib 7.x uses record-style)
+- `ResourceKey.identifier()` not `location()`
+- `ServerPlayer.server` is private — use `player.level().getServer()` instead
+- `PlayerList.isOp()` takes `NameAndId`, not `GameProfile` — use `new NameAndId(gameProfile)`
+- `DedicatedServer` has `getProperties()` for server.properties access
+- `Settings.MutableValue` fields use `.get()` to read values
+
+## Build & Run
+
+```bash
+./gradlew build         # Compile and produce mod jar
+./gradlew runServer     # Launch dedicated server with mod loaded (first run: accept EULA in run/eula.txt)
+```
+
+## Config
+
+Generated at `run/config/mcrestapi.json` on first server start. Contains port, bind address, max connections, and auto-generated API key.
+
+## Bruno Collection
+
+API testing collection in `McRestApi-Bruno/`. Open with Bruno, select the "Local" environment. API key is stored as a variable in the environment.
+
+## Development Plan
+
+Full roadmap and technical plan in `docs/PLAN.md`.
