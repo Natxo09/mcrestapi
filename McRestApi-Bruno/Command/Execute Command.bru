@@ -1,0 +1,21 @@
+meta {
+  name: Execute Command
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/command
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{apiKey}}
+}
+
+body:json {
+  {
+    "command": "say Hello from MCRestAPI!"
+  }
+}

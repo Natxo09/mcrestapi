@@ -1,0 +1,15 @@
+meta {
+  name: Get History
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/chat
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{apiKey}}
+}

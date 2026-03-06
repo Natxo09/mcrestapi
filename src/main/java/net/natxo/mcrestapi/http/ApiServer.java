@@ -3,10 +3,14 @@ package net.natxo.mcrestapi.http;
 import com.sun.net.httpserver.HttpServer;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.natxo.mcrestapi.MCRestAPI;
+import net.natxo.mcrestapi.collectors.EventCollector;
 import net.natxo.mcrestapi.collectors.PlayerTracker;
 import net.natxo.mcrestapi.collectors.TpsCollector;
 import net.natxo.mcrestapi.config.ApiConfig;
 import net.natxo.mcrestapi.endpoints.AdminDashboardEndpoint;
+import net.natxo.mcrestapi.endpoints.ChatEndpoint;
+import net.natxo.mcrestapi.endpoints.CommandEndpoint;
+import net.natxo.mcrestapi.endpoints.EventStreamEndpoint;
 import net.natxo.mcrestapi.endpoints.OpenApiEndpoint;
 import net.natxo.mcrestapi.endpoints.PlayersEndpoint;
 import net.natxo.mcrestapi.endpoints.ServerEndpoint;
@@ -27,7 +31,7 @@ public class ApiServer {
 	private final HttpServer httpServer;
 	private final boolean swaggerEnabled;
 
-	public ApiServer(ApiConfig config, TpsCollector tpsCollector, PlayerTracker playerTracker, DedicatedServer server) throws IOException {
+	public ApiServer(ApiConfig config, TpsCollector tpsCollector, PlayerTracker playerTracker, EventCollector eventCollector, DedicatedServer server) throws IOException {
 		InetSocketAddress address = new InetSocketAddress(config.getBindAddress(), config.getPort());
 		this.httpServer = HttpServer.create(address, config.getMaxConnections());
 		this.httpServer.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
@@ -37,6 +41,9 @@ public class ApiServer {
 		router.register("/api/server", new ServerEndpoint(tpsCollector, playerTracker, server), "server.read");
 		router.register("/api/players", new PlayersEndpoint(playerTracker), "players.read");
 		router.register("/api/world", new WorldEndpoint(server), "world.read");
+		router.register("/api/chat", new ChatEndpoint(eventCollector), "chat.read");
+		router.register("/api/events/stream", new EventStreamEndpoint(eventCollector), "chat.stream");
+		router.register("/api/command", new CommandEndpoint(server), "command.execute");
 
 		Path serverDir = server.getServerDirectory();
 		router.registerPublic("/api/server/icon", new ServerIconEndpoint(serverDir));

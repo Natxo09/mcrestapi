@@ -1,0 +1,15 @@
+meta {
+  name: Get Filtered
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/chat?limit=20&type=chat,join,leave
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{apiKey}}
+}
