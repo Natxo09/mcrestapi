@@ -1,0 +1,15 @@
+meta {
+  name: Delete Key
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{baseUrl}}/api/admin/keys?id=dk_CHANGEME
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{masterKey}}
+}

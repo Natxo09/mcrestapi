@@ -1,0 +1,21 @@
+meta {
+  name: Add CORS Origin
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/admin/cors
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{masterKey}}
+}
+
+body:json {
+  {
+    "origin": "http://localhost:3000"
+  }
+}

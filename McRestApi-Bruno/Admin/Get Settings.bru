@@ -1,0 +1,15 @@
+meta {
+  name: Get Settings
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{baseUrl}}/api/admin/settings
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{masterKey}}
+}

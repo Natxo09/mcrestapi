@@ -1,0 +1,22 @@
+meta {
+  name: Update Key
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/api/admin/keys?id=dk_CHANGEME
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{masterKey}}
+}
+
+body:json {
+  {
+    "name": "Renamed Key",
+    "permissions": ["*"]
+  }
+}

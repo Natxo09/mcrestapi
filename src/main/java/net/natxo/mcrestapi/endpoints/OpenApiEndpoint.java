@@ -10,11 +10,11 @@ import java.nio.charset.StandardCharsets;
 
 public class OpenApiEndpoint implements HttpHandler {
 
-	private final String specJson;
+	private final String specTemplate;
 
 	public OpenApiEndpoint(int port) {
 		String template = loadSpec();
-		this.specJson = template.replace("{{PORT}}", String.valueOf(port));
+		this.specTemplate = template.replace("{{PORT}}", String.valueOf(port));
 	}
 
 	@Override
@@ -24,7 +24,24 @@ public class OpenApiEndpoint implements HttpHandler {
 			return;
 		}
 
-		HttpUtil.sendJson(exchange, 200, specJson);
+		String host = exchange.getRequestHeaders().getFirst("Host");
+		String spec;
+		if (host != null) {
+			String baseUrl = "http://" + host;
+			spec = specTemplate.replace("http://localhost:" + extractPort(host), baseUrl);
+		} else {
+			spec = specTemplate;
+		}
+
+		HttpUtil.sendJson(exchange, 200, spec);
+	}
+
+	private String extractPort(String host) {
+		int colonIndex = host.indexOf(':');
+		if (colonIndex >= 0) {
+			return host.substring(colonIndex + 1);
+		}
+		return "80";
 	}
 
 	private static String loadSpec() {

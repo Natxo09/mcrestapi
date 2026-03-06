@@ -1,0 +1,22 @@
+meta {
+  name: Create Key
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/admin/keys
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{masterKey}}
+}
+
+body:json {
+  {
+    "name": "Test Key",
+    "permissions": ["server.read", "players.read"]
+  }
+}

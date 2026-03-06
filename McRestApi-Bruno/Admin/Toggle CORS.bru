@@ -1,0 +1,21 @@
+meta {
+  name: Toggle CORS
+  type: http
+  seq: 7
+}
+
+put {
+  url: {{baseUrl}}/api/admin/cors
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{masterKey}}
+}
+
+body:json {
+  {
+    "enabled": true
+  }
+}

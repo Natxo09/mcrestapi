@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCRestAPI — Admin</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Login Screen -->
+  <div id="login-screen" class="login-screen">
+    <div class="login-card">
+      <div class="logo">&#9881;</div>
+      <h1>MCRestAPI</h1>
+      <p class="subtitle">Enter your master key to access the admin panel</p>
+      <div class="form-group">
+        <label for="master-key-input">Master Key</label>
+        <input type="password" id="master-key-input" class="form-input" placeholder="mcsapi_..." autocomplete="off">
+      </div>
+      <button id="login-btn" class="btn btn-primary" style="width:100%">Sign In</button>
+    </div>
+  </div>
+
+  <!-- App Layout -->
+  <div id="app" class="app-layout hidden">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="dot"></span>
+        <h2>MCRestAPI</h2>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">Management</div>
+        <div class="nav-item active" data-page="keys">
+          <span class="icon">&#128273;</span>
+          <span>API Keys</span>
+        </div>
+        <div class="nav-item" data-page="cors">
+          <span class="icon">&#127760;</span>
+          <span>CORS</span>
+        </div>
+        <div class="nav-item" data-page="settings">
+          <span class="icon">&#9881;</span>
+          <span>Settings</span>
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn-logout">Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="main-content">
+      <div class="main-header">
+        <h1 id="page-title">API Keys</h1>
+        <span id="page-badge" class="badge"></span>
+      </div>
+
+      <div class="content-area">
+
+        <!-- Keys Page -->
+        <div id="page-keys" class="page">
+          <div class="card">
+            <div class="card-header">
+              <h3>API Keys</h3>
+              <button id="create-key-btn" class="btn btn-primary btn-sm">+ Create Key</button>
+            </div>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>ID</th>
+                    <th>Permissions</th>
+                    <th>Created</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="keys-table-body"></tbody>
+              </table>
+            </div>
+            <div id="keys-empty" class="empty-state hidden">No API keys yet. Create one to get started.</div>
+          </div>
+        </div>
+
+        <!-- CORS Page -->
+        <div id="page-cors" class="page hidden">
+          <div class="card">
+            <div class="card-header">
+              <h3>CORS Settings</h3>
+            </div>
+            <div class="toggle-row">
+              <div>
+                <div class="toggle-label">Enable CORS</div>
+                <div class="toggle-desc">Allow cross-origin requests from specified origins</div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="cors-toggle">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h3>Allowed Origins</h3>
+            </div>
+            <div class="inline-form" style="margin-bottom: 16px;">
+              <input type="text" id="cors-origin-input" class="form-input" placeholder="https://example.com">
+              <button id="add-origin-btn" class="btn btn-primary btn-sm">Add</button>
+            </div>
+            <div id="cors-origins-list"></div>
+            <div id="cors-empty" class="empty-state hidden">No origins configured. Add one above.</div>
+          </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="page-settings" class="page hidden">
+          <div class="card">
+            <div class="card-header">
+              <h3>Server Settings</h3>
+            </div>
+            <div class="toggle-row">
+              <div>
+                <div class="toggle-label">Swagger UI</div>
+                <div class="toggle-desc">Enable the API documentation interface at /api/docs</div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="swagger-toggle">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h3>Server Info</h3>
+            </div>
+            <div id="settings-info"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Key Modal -->
+  <div id="create-key-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <h2>Create API Key</h2>
+      <div class="form-group">
+        <label for="new-key-name">Name</label>
+        <input type="text" id="new-key-name" class="form-input" placeholder="e.g. Dashboard, Bot...">
+      </div>
+      <div class="form-group">
+        <label>Permissions</label>
+        <div class="checkbox-group">
+          <label class="checkbox-item">
+            <input type="checkbox" value="*" id="perm-all"> All (*)
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" value="server.read" class="perm-single"> server.read
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" value="players.read" class="perm-single"> players.read
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" value="world.read" class="perm-single"> world.read
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" value="chat.read" class="perm-single"> chat.read
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" value="chat.stream" class="perm-single"> chat.stream
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" value="command.execute" class="perm-single"> command.execute
+          </label>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="cancel-create-btn" class="btn btn-ghost">Cancel</button>
+        <button id="confirm-create-btn" class="btn btn-primary">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Key Created Modal -->
+  <div id="key-created-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <h2>Key Created</h2>
+      <p class="text-muted">Copy this key now. It will not be shown again.</p>
+      <div class="key-reveal">
+        <code id="created-key-value"></code>
+        <button class="btn btn-ghost btn-sm btn-copy" onclick="copyCreatedKey()">Copy</button>
+      </div>
+      <div class="modal-actions">
+        <button id="close-created-btn" class="btn btn-primary">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Key Modal -->
+  <div id="edit-key-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <h2>Edit API Key</h2>
+      <input type="hidden" id="edit-key-id">
+      <div class="form-group">
+        <label for="edit-key-name">Name</label>
+        <input type="text" id="edit-key-name" class="form-input">
+      </div>
+      <div class="form-group">
+        <label>Permissions</label>
+        <div class="checkbox-group" id="edit-perms-group">
+          <label class="checkbox-item">
+            <input type="checkbox" value="*" id="edit-perm-all"> All (*)
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" value="server.read" class="edit-perm-single"> server.read
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" value="players.read" class="edit-perm-single"> players.read
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" value="world.read" class="edit-perm-single"> world.read
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" value="chat.read" class="edit-perm-single"> chat.read
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" value="chat.stream" class="edit-perm-single"> chat.stream
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" value="command.execute" class="edit-perm-single"> command.execute
+          </label>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="cancel-edit-btn" class="btn btn-ghost">Cancel</button>
+        <button id="confirm-edit-btn" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

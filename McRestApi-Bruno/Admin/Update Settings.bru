@@ -1,0 +1,21 @@
+meta {
+  name: Update Settings
+  type: http
+  seq: 10
+}
+
+put {
+  url: {{baseUrl}}/api/admin/settings
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{masterKey}}
+}
+
+body:json {
+  {
+    "swagger_enabled": true
+  }
+}
