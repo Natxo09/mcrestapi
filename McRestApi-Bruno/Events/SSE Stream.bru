@@ -1,0 +1,15 @@
+meta {
+  name: SSE Stream
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/events/stream
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{apiKey}}
+}
