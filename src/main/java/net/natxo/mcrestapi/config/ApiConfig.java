@@ -18,6 +18,7 @@ public class ApiConfig {
 	private String bindAddress = "127.0.0.1";
 	private int maxConnections = 50;
 	private String apiKey = "";
+	private boolean swagger = true;
 
 	public static ApiConfig loadOrCreate(Path configDir) {
 		Path configFile = configDir.resolve("mcrestapi.json");
@@ -86,5 +87,9 @@ public class ApiConfig {
 
 	public String getApiKey() {
 		return apiKey;
+	}
+
+	public boolean isSwaggerEnabled() {
+		return swagger;
 	}
 }

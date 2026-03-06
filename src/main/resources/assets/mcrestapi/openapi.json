@@ -1,0 +1,231 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "MCRestAPI",
+    "description": "REST API for monitoring and controlling Minecraft servers",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:{{PORT}}",
+      "description": "Local Minecraft Server"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/server": {
+      "get": {
+        "tags": ["Server"],
+        "summary": "Get server information",
+        "description": "Returns server stats. Use the `fields` parameter to request specific sections only.",
+        "parameters": [
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "description": "Comma-separated list of sections to include: info, tps, memory, cpu, players, properties. Returns all if omitted.",
+            "schema": {
+              "type": "string",
+              "example": "tps,memory,cpu"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Server information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/players": {
+      "get": {
+        "tags": ["Players"],
+        "summary": "Get online players",
+        "description": "Returns a list of all online players with their current stats and position.",
+        "responses": {
+          "200": {
+            "description": "Player list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayersResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Server tick timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "API key from config/mcrestapi.json (e.g. mcsapi_abc123...)"
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          }
+        }
+      },
+      "ServerResponse": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "example": "1.21.11"
+          },
+          "motd": {
+            "type": "string",
+            "example": "A Minecraft Server"
+          },
+          "server_port": {
+            "type": "integer",
+            "example": 25565
+          },
+          "online_mode": {
+            "type": "boolean",
+            "example": true
+          },
+          "uptime_seconds": {
+            "type": "integer",
+            "example": 86400
+          },
+          "tps": {
+            "type": "number",
+            "example": 20.0
+          },
+          "mspt": {
+            "type": "number",
+            "example": 12.5
+          },
+          "memory": {
+            "type": "object",
+            "properties": {
+              "used_mb": { "type": "integer", "example": 2048 },
+              "total_mb": { "type": "integer", "example": 4096 },
+              "max_mb": { "type": "integer", "example": 8192 },
+              "free_mb": { "type": "integer", "example": 2048 },
+              "usage_percent": { "type": "number", "example": 50.0 }
+            }
+          },
+          "cpu": {
+            "type": "object",
+            "properties": {
+              "system_load": { "type": "number", "example": 11.47 },
+              "available_processors": { "type": "integer", "example": 8 },
+              "process_load": { "type": "number", "example": 15.2 }
+            }
+          },
+          "players": {
+            "type": "object",
+            "properties": {
+              "online": { "type": "integer", "example": 5 },
+              "max": { "type": "integer", "example": 20 }
+            }
+          },
+          "properties": {
+            "type": "object",
+            "properties": {
+              "gamemode": { "type": "string", "example": "survival" },
+              "difficulty": { "type": "string", "example": "easy" },
+              "hardcore": { "type": "boolean", "example": false },
+              "allow_flight": { "type": "boolean", "example": false },
+              "whitelist": { "type": "boolean", "example": false },
+              "enforce_whitelist": { "type": "boolean", "example": false },
+              "enforce_secure_profile": { "type": "boolean", "example": true },
+              "max_world_size": { "type": "integer", "example": 29999984 },
+              "spawn_protection": { "type": "integer", "example": 16 },
+              "view_distance": { "type": "integer", "example": 10 },
+              "simulation_distance": { "type": "integer", "example": 10 },
+              "max_tick_time": { "type": "integer", "example": 60000 }
+            }
+          }
+        }
+      },
+      "PlayersResponse": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "example": 2
+          },
+          "players": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Player"
+            }
+          }
+        }
+      },
+      "Player": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "example": "Steve" },
+          "uuid": { "type": "string", "example": "069a79f4-44e9-4726-a5be-fca90e38aaf5" },
+          "health": { "type": "number", "example": 20.0 },
+          "food_level": { "type": "integer", "example": 18 },
+          "position": {
+            "type": "object",
+            "properties": {
+              "x": { "type": "number", "example": 100.5 },
+              "y": { "type": "number", "example": 64.0 },
+              "z": { "type": "number", "example": -200.3 }
+            }
+          },
+          "dimension": { "type": "string", "example": "minecraft:overworld" },
+          "ping_ms": { "type": "integer", "example": 45 },
+          "game_mode": { "type": "string", "example": "survival" },
+          "is_op": { "type": "boolean", "example": false }
+        }
+      }
+    }
+  }
+}
