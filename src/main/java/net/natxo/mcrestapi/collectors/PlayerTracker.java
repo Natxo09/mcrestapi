@@ -54,12 +54,14 @@ public class PlayerTracker {
 			String dimension,
 			int pingMs,
 			String gameMode,
-			boolean isOp
+			boolean isOp,
+			String skinHeadUrl
 	) {
 		public static PlayerSnapshot fromPlayer(ServerPlayer player) {
+			String uuid = player.getStringUUID();
 			return new PlayerSnapshot(
 					player.getGameProfile().name(),
-					player.getStringUUID(),
+					uuid,
 					player.getHealth(),
 					player.getFoodData().getFoodLevel(),
 					player.getX(),
@@ -68,7 +70,8 @@ public class PlayerTracker {
 					player.level().dimension().identifier().toString(),
 					player.connection.latency(),
 					player.gameMode.getGameModeForPlayer().getName(),
-					player.level().getServer().getPlayerList().isOp(new NameAndId(player.getGameProfile()))
+					player.level().getServer().getPlayerList().isOp(new NameAndId(player.getGameProfile())),
+					"https://mc-heads.net/avatar/" + uuid + "/64"
 			);
 		}
 	}

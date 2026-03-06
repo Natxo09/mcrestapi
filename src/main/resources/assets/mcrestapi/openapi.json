@@ -58,6 +58,37 @@
         }
       }
     },
+    "/api/server/icon": {
+      "get": {
+        "tags": ["Server"],
+        "summary": "Get server icon",
+        "description": "Returns the server icon (server-icon.png) as a PNG image. Does not require authentication.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Server icon PNG",
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No server icon configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/players": {
       "get": {
         "tags": ["Players"],
@@ -223,7 +254,8 @@
           "dimension": { "type": "string", "example": "minecraft:overworld" },
           "ping_ms": { "type": "integer", "example": 45 },
           "game_mode": { "type": "string", "example": "survival" },
-          "is_op": { "type": "boolean", "example": false }
+          "is_op": { "type": "boolean", "example": false },
+          "skin_head_url": { "type": "string", "example": "https://mc-heads.net/avatar/069a79f4-44e9-4726-a5be-fca90e38aaf5/64" }
         }
       }
     }

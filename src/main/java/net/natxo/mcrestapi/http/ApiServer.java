@@ -9,10 +9,12 @@ import net.natxo.mcrestapi.config.ApiConfig;
 import net.natxo.mcrestapi.endpoints.OpenApiEndpoint;
 import net.natxo.mcrestapi.endpoints.PlayersEndpoint;
 import net.natxo.mcrestapi.endpoints.ServerEndpoint;
+import net.natxo.mcrestapi.endpoints.ServerIconEndpoint;
 import net.natxo.mcrestapi.endpoints.SwaggerEndpoint;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.file.Path;
 import java.util.concurrent.Executors;
 
 public class ApiServer {
@@ -29,6 +31,9 @@ public class ApiServer {
 		Router router = new Router(httpServer, config.getApiKey());
 		router.register("/api/server", new ServerEndpoint(tpsCollector, playerTracker, server));
 		router.register("/api/players", new PlayersEndpoint(playerTracker));
+
+		Path serverDir = server.getServerDirectory();
+		httpServer.createContext("/api/server/icon", new ServerIconEndpoint(serverDir));
 
 		if (swaggerEnabled) {
 			SwaggerEndpoint swaggerEndpoint = new SwaggerEndpoint();

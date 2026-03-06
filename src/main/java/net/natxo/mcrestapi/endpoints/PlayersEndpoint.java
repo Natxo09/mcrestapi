@@ -67,6 +67,7 @@ public class PlayersEndpoint implements HttpHandler {
 		player.put("ping_ms", snapshot.pingMs());
 		player.put("game_mode", snapshot.gameMode());
 		player.put("is_op", snapshot.isOp());
+		player.put("skin_head_url", snapshot.skinHeadUrl());
 
 		return player;
 	}
