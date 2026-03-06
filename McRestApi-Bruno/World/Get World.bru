@@ -1,0 +1,15 @@
+meta {
+  name: Get World
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/world
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{apiKey}}
+}

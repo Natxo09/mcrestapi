@@ -1,0 +1,15 @@
+meta {
+  name: Get Dimensions
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/world?fields=dimensions
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{apiKey}}
+}

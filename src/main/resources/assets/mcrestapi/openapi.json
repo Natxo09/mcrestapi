@@ -89,6 +89,57 @@
         }
       }
     },
+    "/api/world": {
+      "get": {
+        "tags": ["World"],
+        "summary": "Get world information",
+        "description": "Returns global world data (shared across dimensions) and per-dimension stats. Use the `fields` parameter to request specific sections.",
+        "parameters": [
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "description": "Comma-separated list of sections: global, dimensions. Returns all if omitted.",
+            "schema": {
+              "type": "string",
+              "example": "global"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "World information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorldResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Server tick timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/players": {
       "get": {
         "tags": ["Players"],
@@ -217,6 +268,69 @@
               "view_distance": { "type": "integer", "example": 10 },
               "simulation_distance": { "type": "integer", "example": 10 },
               "max_tick_time": { "type": "integer", "example": 60000 }
+            }
+          }
+        }
+      },
+      "WorldResponse": {
+        "type": "object",
+        "properties": {
+          "global": { "$ref": "#/components/schemas/WorldGlobal" },
+          "dimensions": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Dimension" }
+          }
+        }
+      },
+      "WorldGlobal": {
+        "type": "object",
+        "description": "Shared world data (same across all dimensions)",
+        "properties": {
+          "seed": { "type": "integer", "example": 123456789 },
+          "time": {
+            "type": "object",
+            "properties": {
+              "game_time": { "type": "integer", "example": 72000 },
+              "day_time": { "type": "integer", "example": 6000 },
+              "day_count": { "type": "integer", "example": 42 }
+            }
+          },
+          "weather": {
+            "type": "object",
+            "properties": {
+              "raining": { "type": "boolean", "example": false },
+              "thundering": { "type": "boolean", "example": false }
+            }
+          },
+          "difficulty": { "type": "string", "example": "easy" },
+          "difficulty_locked": { "type": "boolean", "example": false },
+          "hardcore": { "type": "boolean", "example": false },
+          "pvp": { "type": "boolean", "example": true },
+          "spawn": {
+            "type": "object",
+            "properties": {
+              "x": { "type": "integer", "example": 0 },
+              "y": { "type": "integer", "example": 64 },
+              "z": { "type": "integer", "example": 0 }
+            }
+          }
+        }
+      },
+      "Dimension": {
+        "type": "object",
+        "description": "Per-dimension data",
+        "properties": {
+          "name": { "type": "string", "example": "minecraft:overworld" },
+          "sea_level": { "type": "integer", "example": 63 },
+          "flat": { "type": "boolean", "example": false },
+          "loaded_chunks": { "type": "integer", "example": 625 },
+          "entity_count": { "type": "integer", "example": 1520 },
+          "world_border": {
+            "type": "object",
+            "properties": {
+              "size": { "type": "number", "example": 59999968.0 },
+              "center_x": { "type": "number", "example": 0.0 },
+              "center_z": { "type": "number", "example": 0.0 }
             }
           }
         }

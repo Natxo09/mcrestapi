@@ -11,6 +11,7 @@ import net.natxo.mcrestapi.endpoints.PlayersEndpoint;
 import net.natxo.mcrestapi.endpoints.ServerEndpoint;
 import net.natxo.mcrestapi.endpoints.ServerIconEndpoint;
 import net.natxo.mcrestapi.endpoints.SwaggerEndpoint;
+import net.natxo.mcrestapi.endpoints.WorldEndpoint;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -31,6 +32,7 @@ public class ApiServer {
 		Router router = new Router(httpServer, config.getApiKey());
 		router.register("/api/server", new ServerEndpoint(tpsCollector, playerTracker, server));
 		router.register("/api/players", new PlayersEndpoint(playerTracker));
+		router.register("/api/world", new WorldEndpoint(server));
 
 		Path serverDir = server.getServerDirectory();
 		httpServer.createContext("/api/server/icon", new ServerIconEndpoint(serverDir));
