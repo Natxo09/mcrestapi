@@ -79,6 +79,31 @@ Generated at `run/config/mcrestapi.json` on first server start. Contains port, b
 
 API testing collection in `McRestApi-Bruno/`. Open with Bruno, select the "Local" environment. API key is stored as a variable in the environment.
 
+## Publishing & Releases
+
+- **Modrinth project ID:** `XZCgCz7D`
+- **Minotaur plugin** configured in `build.gradle` for automated publishing
+- **Modrinth token** stored in `.env` locally and in GitHub secret `MODRINTH_TOKEN`
+- **CI/CD:** `.github/workflows/publish.yml` triggers on tag push (`v*`)
+- **Two READMEs:** `README.md` (GitHub, full) and `MODRINTH_README.md` (Modrinth, compact)
+
+### How to publish a new version
+
+1. Update `mod_version` in `gradle.properties`
+2. Create an annotated tag with the changelog as the message:
+   ```bash
+   git tag -a v1.1.0 -m "Summary of this release
+
+   - Change 1
+   - Change 2
+   - Fix something"
+   ```
+3. Push the tag: `git push origin v1.1.0`
+4. The workflow automatically:
+   - Builds the mod
+   - Publishes to Modrinth with the tag message as changelog
+   - Creates a GitHub Release with the JAR attached
+
 ## Development Plan
 
 Full roadmap and technical plan in `docs/PLAN.md`.
