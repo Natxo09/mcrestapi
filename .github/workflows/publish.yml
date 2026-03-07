@@ -32,10 +32,13 @@ jobs:
       - name: build
         run: ./gradlew build
 
+      - name: fetch tags
+        run: git fetch --tags --force
+
       - name: extract changelog from tag
         id: changelog
         run: |
-          TAG_MESSAGE=$(git tag -l --format='%(contents)' "${GITHUB_REF_NAME}")
+          TAG_MESSAGE=$(git for-each-ref --format='%(contents)' "refs/tags/${GITHUB_REF_NAME}")
           echo "message<<EOF" >> "$GITHUB_OUTPUT"
           echo "$TAG_MESSAGE" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
