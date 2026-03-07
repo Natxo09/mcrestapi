@@ -31,6 +31,7 @@ A Fabric mod for Minecraft 1.21.11 that exposes a REST API and real-time event s
 - [Admin Dashboard](#admin-dashboard)
 - [Swagger / OpenAPI](#swagger--openapi)
 - [Security](#security)
+- [API Testing with Bruno](#api-testing-with-bruno)
 - [Building from Source](#building-from-source)
 - [License](#license)
 
@@ -651,6 +652,29 @@ The master key is generated on first launch and its hash is stored separately fr
 - Create API keys with minimal permissions needed for each use case
 - Rotate API keys periodically by revoking and creating new ones
 - Enable CORS only if browser-based clients need access, and restrict origins to specific domains
+
+---
+
+## API Testing with Bruno
+
+The repository includes a [Bruno](https://www.usebruno.com/) collection at `McRestApi-Bruno/` with pre-configured requests for every endpoint.
+
+**Setup:**
+
+1. Install [Bruno](https://www.usebruno.com/) (open-source API client)
+2. Open Bruno and select **Open Collection**, then navigate to the `McRestApi-Bruno/` folder
+3. Select the **Local** environment (top-right dropdown)
+4. Edit the environment variables in `McRestApi-Bruno/environments/Local.bru` (or from Bruno: Environment Settings > Local) with your own keys:
+
+```
+vars {
+  baseUrl: http://localhost:8080
+  apiKey: <your API key>
+  masterKey: <your master key>
+}
+```
+
+The collection is organized by category: Server, Players, World, Chat, Events, Command, Admin, and Auth.
 
 ---
 
