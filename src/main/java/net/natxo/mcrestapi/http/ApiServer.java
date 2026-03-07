@@ -11,6 +11,7 @@ import net.natxo.mcrestapi.endpoints.AdminDashboardEndpoint;
 import net.natxo.mcrestapi.endpoints.ChatEndpoint;
 import net.natxo.mcrestapi.endpoints.CommandEndpoint;
 import net.natxo.mcrestapi.endpoints.EventStreamEndpoint;
+import net.natxo.mcrestapi.endpoints.ModsEndpoint;
 import net.natxo.mcrestapi.endpoints.OpenApiEndpoint;
 import net.natxo.mcrestapi.endpoints.PlayersEndpoint;
 import net.natxo.mcrestapi.endpoints.ServerEndpoint;
@@ -44,6 +45,7 @@ public class ApiServer {
 		router.register("/api/chat", new ChatEndpoint(eventCollector), "chat.read");
 		router.register("/api/events/stream", new EventStreamEndpoint(eventCollector), "chat.stream");
 		router.register("/api/command", new CommandEndpoint(server), "command.execute");
+		router.register("/api/mods", new ModsEndpoint(), "mods.read");
 
 		Path serverDir = server.getServerDirectory();
 		router.registerPublic("/api/server/icon", new ServerIconEndpoint(serverDir));

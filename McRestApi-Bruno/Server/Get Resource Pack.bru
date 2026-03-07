@@ -1,0 +1,15 @@
+meta {
+  name: Get Resource Pack
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseUrl}}/api/server?fields=resource_pack
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{apiKey}}
+}

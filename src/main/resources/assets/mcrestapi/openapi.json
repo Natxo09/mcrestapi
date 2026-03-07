@@ -27,7 +27,7 @@
             "name": "fields",
             "in": "query",
             "required": false,
-            "description": "Comma-separated list of sections to include: info, tps, memory, cpu, players, properties. Returns all if omitted.",
+            "description": "Comma-separated list of sections to include: info, tps, memory, cpu, players, properties, resource_pack. Returns all if omitted.",
             "schema": {
               "type": "string",
               "example": "tps,memory,cpu"
@@ -78,6 +78,35 @@
           },
           "404": {
             "description": "No server icon configured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/mods": {
+      "get": {
+        "tags": ["Mods"],
+        "summary": "Get installed mods",
+        "description": "Returns a list of all Fabric mods loaded on the server with their metadata.",
+        "responses": {
+          "200": {
+            "description": "Mods list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
@@ -560,6 +589,16 @@
               "max": { "type": "integer", "example": 20 }
             }
           },
+          "resource_pack": {
+            "nullable": true,
+            "type": "object",
+            "properties": {
+              "url": { "type": "string", "example": "https://example.com/pack.zip" },
+              "hash": { "type": "string", "example": "abc123def456" },
+              "required": { "type": "boolean", "example": true },
+              "prompt": { "type": "string", "nullable": true, "example": "Please accept the resource pack" }
+            }
+          },
           "properties": {
             "type": "object",
             "properties": {
@@ -685,6 +724,36 @@
           "bind_address": { "type": "string", "example": "127.0.0.1" },
           "max_connections": { "type": "integer", "example": 50 },
           "swagger_enabled": { "type": "boolean", "example": true }
+        }
+      },
+      "ModsResponse": {
+        "type": "object",
+        "properties": {
+          "count": { "type": "integer", "example": 12 },
+          "mods": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Mod" }
+          }
+        }
+      },
+      "Mod": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "mcrestapi" },
+          "name": { "type": "string", "example": "MCRestAPI" },
+          "version": { "type": "string", "example": "1.1.0" },
+          "description": { "type": "string", "example": "REST API for Minecraft servers" },
+          "authors": { "type": "array", "items": { "type": "string" }, "example": ["natxo"] },
+          "license": { "type": "array", "items": { "type": "string" }, "example": ["MIT"] },
+          "environment": { "type": "string", "enum": ["SERVER", "CLIENT", "UNIVERSAL"], "example": "SERVER" },
+          "contact": {
+            "type": "object",
+            "properties": {
+              "homepage": { "type": "string" },
+              "sources": { "type": "string" },
+              "issues": { "type": "string" }
+            }
+          }
         }
       },
       "PlayersResponse": {

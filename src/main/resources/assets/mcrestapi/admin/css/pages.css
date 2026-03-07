@@ -153,6 +153,216 @@
   font-weight: 600;
 }
 
+/* ─── Mods Page ──────────────────────────── */
+
+.mods-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.mods-toolbar-left {
+  font-size: 13px;
+}
+
+.mods-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.view-toggle {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.view-btn {
+  background: transparent;
+  border: none;
+  padding: 5px 8px;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  transition: all 0.15s;
+}
+
+.view-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+.view-btn.active {
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.view-btn + .view-btn {
+  border-left: 1px solid var(--border);
+}
+
+/* List view */
+
+.mod-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mod-row {
+  background: var(--bg-secondary);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  box-shadow: 0 1px 2px var(--shadow);
+}
+
+.mod-row-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.mod-row-details {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.mod-row-author {
+  color: var(--text-muted);
+}
+
+.mod-row .mod-desc {
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+
+.mod-row .mod-links {
+  margin-top: 4px;
+}
+
+/* Grid view */
+
+.mod-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 12px;
+}
+
+.mod-card {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  box-shadow: 0 1px 4px var(--shadow);
+}
+
+.mod-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.mod-title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.mod-name {
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mod-version {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 1px 8px;
+  border-radius: 99px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.mod-env {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 99px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.mod-env.env-server {
+  background: var(--info-dim);
+  color: var(--info);
+}
+
+.mod-env.env-client {
+  background: var(--warning-dim);
+  color: var(--warning);
+}
+
+.mod-env.env-universal {
+  background: var(--bg-active);
+  color: var(--text-secondary);
+}
+
+.mod-id {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.mod-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.mod-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.mod-license {
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--bg-tertiary);
+}
+
+.mod-links {
+  margin-top: 8px;
+  font-size: 12px;
+}
+
+.mod-links a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.mod-links a:hover {
+  text-decoration: underline;
+}
+
 /* ─── Chat / Events Page ──────────────────── */
 
 .chat-container {

@@ -7,6 +7,7 @@
     dashboard:  { title: 'Dashboard',  module: DashboardPage },
     players:    { title: 'Players',    module: PlayersPage },
     world:      { title: 'World',      module: WorldPage },
+    mods:       { title: 'Mods',       module: ModsPage },
     chat:       { title: 'Chat',       module: ChatPage },
     console:    { title: 'Console',    module: ConsolePage },
     keys:       { title: 'API Keys',   module: KeysPage },

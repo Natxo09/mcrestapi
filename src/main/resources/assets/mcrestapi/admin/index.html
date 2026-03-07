@@ -48,6 +48,11 @@
           <span>World</span>
         </div>
 
+        <div class="nav-item" data-page="mods">
+          <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 256 256"><path d="M220.27,158.54a8,8,0,0,0-7.7-.46,20,20,0,1,1,0-36.16A8,8,0,0,0,224,114.69V72a16,16,0,0,0-16-16H171.78a35.36,35.36,0,0,0,.22-4,36.11,36.11,0,0,0-11.36-26.24,36,36,0,0,0-60.55,23.62,36.56,36.56,0,0,0,.14,6.62H64A16,16,0,0,0,48,72v32.22a35.36,35.36,0,0,0-4-.22,36.12,36.12,0,0,0-26.24,11.36,35.7,35.7,0,0,0-9.69,27,36.08,36.08,0,0,0,33.31,33.6,35.68,35.68,0,0,0,6.62-.14V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V165.31A8,8,0,0,0,220.27,158.54ZM208,208H64V165.31a8,8,0,0,0-11.43-7.23,20,20,0,1,1,0-36.16A8,8,0,0,0,64,114.69V72h46.69a8,8,0,0,0,7.23-11.43,20,20,0,1,1,36.16,0A8,8,0,0,0,161.31,72H208v32.23a35.68,35.68,0,0,0-6.62-.14A36,36,0,0,0,204,176a35.36,35.36,0,0,0,4-.22Z"/></svg></span>
+          <span>Mods</span>
+        </div>
+
         <div class="sidebar-section">Live</div>
         <div class="nav-item" data-page="chat">
           <span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 256 256"><path d="M216,48H40A16,16,0,0,0,24,64V224a15.84,15.84,0,0,0,9.25,14.5A16.05,16.05,0,0,0,40,240a15.89,15.89,0,0,0,10.25-3.78l.09-.07L83,208H216a16,16,0,0,0,16-16V64A16,16,0,0,0,216,48ZM216,192H80a8,8,0,0,0-5.23,1.95L40,224V64H216Z"/></svg></span>
@@ -98,6 +103,11 @@
         <!-- World Page -->
         <div id="page-world" class="page hidden">
           <div id="world-content"></div>
+        </div>
+
+        <!-- Mods Page -->
+        <div id="page-mods" class="page hidden">
+          <div id="mods-content"></div>
         </div>
 
         <!-- Chat Page -->
@@ -212,6 +222,7 @@
           <label class="checkbox-item"><input type="checkbox" value="chat.read" class="perm-single"> chat.read</label>
           <label class="checkbox-item"><input type="checkbox" value="chat.stream" class="perm-single"> chat.stream</label>
           <label class="checkbox-item"><input type="checkbox" value="command.execute" class="perm-single"> command.execute</label>
+          <label class="checkbox-item"><input type="checkbox" value="mods.read" class="perm-single"> mods.read</label>
         </div>
       </div>
       <div class="modal-actions">
@@ -255,6 +266,7 @@
           <label class="checkbox-item"><input type="checkbox" value="chat.read" class="edit-perm-single"> chat.read</label>
           <label class="checkbox-item"><input type="checkbox" value="chat.stream" class="edit-perm-single"> chat.stream</label>
           <label class="checkbox-item"><input type="checkbox" value="command.execute" class="edit-perm-single"> command.execute</label>
+          <label class="checkbox-item"><input type="checkbox" value="mods.read" class="edit-perm-single"> mods.read</label>
         </div>
       </div>
       <div class="modal-actions">
@@ -272,6 +284,7 @@
   <script src="js/dashboard.js"></script>
   <script src="js/players.js"></script>
   <script src="js/world.js"></script>
+  <script src="js/mods.js"></script>
   <script src="js/chat.js"></script>
   <script src="js/console.js"></script>
   <script src="js/keys.js"></script>

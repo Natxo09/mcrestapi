@@ -10,19 +10,23 @@ import net.natxo.mcrestapi.collectors.PlayerTracker;
 import net.natxo.mcrestapi.collectors.TpsCollector;
 import net.natxo.mcrestapi.http.HttpUtil;
 
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
+
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ServerEndpoint implements HttpHandler {
 
 	private static final Gson GSON = new GsonBuilder().create();
-	private static final Set<String> VALID_FIELDS = Set.of("info", "tps", "memory", "cpu", "players", "properties");
+	private static final Set<String> VALID_FIELDS = Set.of("info", "tps", "memory", "cpu", "players", "properties", "resource_pack");
 
 	private final TpsCollector tpsCollector;
 	private final PlayerTracker playerTracker;
@@ -62,6 +66,9 @@ public class ServerEndpoint implements HttpHandler {
 		}
 		if (fields.contains("properties")) {
 			response.put("properties", buildProperties());
+		}
+		if (fields.contains("resource_pack")) {
+			response.put("resource_pack", buildResourcePack());
 		}
 
 		HttpUtil.sendJson(exchange, 200, GSON.toJson(response));
@@ -157,5 +164,27 @@ public class ServerEndpoint implements HttpHandler {
 		properties.put("simulation_distance", props.simulationDistance.get());
 		properties.put("max_tick_time", props.maxTickTime);
 		return properties;
+	}
+
+	private Object buildResourcePack() {
+		Optional<MinecraftServer.ServerResourcePackInfo> packInfo = server.getProperties().serverResourcePackInfo;
+
+		if (packInfo.isEmpty()) {
+			return null;
+		}
+
+		MinecraftServer.ServerResourcePackInfo info = packInfo.get();
+
+		Map<String, Object> pack = new LinkedHashMap<>();
+		pack.put("url", info.url());
+		pack.put("hash", info.hash());
+		pack.put("required", info.isRequired());
+
+		Component prompt = info.prompt();
+		if (prompt != null) {
+			pack.put("prompt", prompt.getString());
+		}
+
+		return pack;
 	}
 }
