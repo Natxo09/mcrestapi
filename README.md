@@ -5,7 +5,7 @@ A Fabric mod for Minecraft 1.21.11 that exposes a REST API and real-time event s
 [![Modrinth Downloads](https://img.shields.io/modrinth/dt/XZCgCz7D?label=Modrinth%20Downloads)](https://modrinth.com/mod/mcrestapi)
 [![Modrinth Version](https://img.shields.io/modrinth/v/XZCgCz7D?label=Latest%20Version)](https://modrinth.com/mod/mcrestapi/versions)
 [![Minecraft Version](https://img.shields.io/modrinth/game-versions/XZCgCz7D?label=Minecraft)](https://modrinth.com/mod/mcrestapi)
-[![License](https://img.shields.io/github/license/Natxo09/mcrestapi)](LICENSE)
+[![License: CC0-1.0](https://img.shields.io/badge/License-CC0_1.0-lightgrey.svg)](LICENSE)
 
 ---
 
@@ -676,4 +676,4 @@ On first run, accept the EULA by editing `run/eula.txt`.
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under [CC0 1.0 Universal](LICENSE) — public domain dedication.
