@@ -60,9 +60,24 @@ jar {
 	}
 }
 
+// load .env file if present
+file('.env').with { envFile ->
+	if (envFile.exists()) {
+		envFile.eachLine { line ->
+			def trimmed = line.trim()
+			if (trimmed && !trimmed.startsWith('#') && trimmed.contains('=')) {
+				def (key, value) = trimmed.split('=', 2)
+				if (System.getenv(key) == null && value) {
+					System.setProperty(key, value)
+				}
+			}
+		}
+	}
+}
+
 // configure modrinth publishing
 modrinth {
-	token = System.getenv("MODRINTH_TOKEN")
+	token = System.getenv("MODRINTH_TOKEN") ?: System.getProperty("MODRINTH_TOKEN")
 	projectId = "XZCgCz7D"
 	versionNumber = project.mod_version
 	versionType = "release"
@@ -70,7 +85,7 @@ modrinth {
 	gameVersions = ["1.21.11"]
 	loaders = ["fabric"]
 	changelog = System.getenv("CHANGELOG") ?: ""
-	syncBodyFrom = rootProject.file("README.md").text
+	syncBodyFrom = rootProject.file("MODRINTH_README.md").text
 
 	dependencies {
 		required.project "fabric-api"
