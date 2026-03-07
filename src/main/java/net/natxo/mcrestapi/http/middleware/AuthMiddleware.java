@@ -29,6 +29,11 @@ public class AuthMiddleware implements HttpHandler {
 			return;
 		}
 
+		if (config.isMasterKey(rawKey)) {
+			next.handle(exchange);
+			return;
+		}
+
 		ApiKey key = config.findKeyByRawValue(rawKey);
 		if (key == null) {
 			HttpUtil.sendJson(exchange, 401, "{\"error\":\"Unauthorized\"}");
@@ -48,6 +53,18 @@ public class AuthMiddleware implements HttpHandler {
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			return authHeader.substring(7);
 		}
+
+		// Fallback: query parameter (needed for SSE/EventSource which can't set headers)
+		String query = exchange.getRequestURI().getQuery();
+		if (query != null) {
+			for (String param : query.split("&")) {
+				String[] kv = param.split("=", 2);
+				if (kv.length == 2 && "_auth".equals(kv[0])) {
+					return kv[1];
+				}
+			}
+		}
+
 		return null;
 	}
 }

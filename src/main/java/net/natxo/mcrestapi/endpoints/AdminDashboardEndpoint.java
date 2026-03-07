@@ -38,7 +38,7 @@ public class AdminDashboardEndpoint implements HttpHandler {
 			fileName = path.substring("/admin/".length());
 		}
 
-		if (fileName.contains("..") || fileName.contains("/")) {
+		if (fileName.contains("..")) {
 			sendError(exchange, 400, "Bad request");
 			return;
 		}
