@@ -7,7 +7,11 @@
 	"authors": [
 		"natxo"
 	],
-	"contact": {},
+	"contact": {
+		"homepage": "https://modrinth.com/mod/mcrestapi",
+		"sources": "https://github.com/Natxo09/mcrestapi",
+		"issues": "https://github.com/Natxo09/mcrestapi/issues"
+	},
 	"license": "MIT",
 	"icon": "assets/mcrestapi/icon.png",
 	"environment": "server",

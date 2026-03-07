@@ -418,9 +418,10 @@ double systemLoad = osBean.getSystemLoadAverage();
 ### Fase 4 — Polish
 
 - [ ] Comando in-game `/mcserverapi` para gestionar keys
-- [ ] Documentacion de la API (OpenAPI/Swagger)
+- [x] Documentacion de la API (OpenAPI/Swagger)
 - [ ] Tests
-- [ ] Publicacion en Modrinth y CurseForge
+- [x] Publicacion en Modrinth (Minotaur + CI/CD)
+- [ ] Publicacion en CurseForge
 - [ ] Port a 26.1 cuando se estabilice
 
 ---
