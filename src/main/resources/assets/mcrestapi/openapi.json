@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "MCRestAPI",
-    "description": "REST API for monitoring and controlling Minecraft servers",
+    "description": "REST API for monitoring and controlling Minecraft servers. Authentication uses a Bearer API key by default; it can be disabled (auth.enabled = false in the config) to delegate authentication to a reverse proxy.",
     "version": "1.0.0"
   },
   "servers": [

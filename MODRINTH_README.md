@@ -56,6 +56,7 @@ The configuration file is located at `config/mcrestapi.json` and is generated au
 | `maxConnections` | integer | `50`          | Maximum concurrent HTTP connections               |
 | `swagger`        | boolean | `true`        | Enable/disable Swagger UI and OpenAPI spec        |
 | `masterKeyHash`  | string  | (generated)   | PBKDF2 hash of the master key                     |
+| `auth`           | object  | (enabled)     | Set `auth.enabled` to `false` to delegate auth to a reverse proxy |
 | `keys`           | array   | (generated)   | List of API keys with permissions                 |
 | `cors`           | object  | (disabled)    | CORS configuration                                |
 
@@ -72,6 +73,16 @@ Authorization: Bearer mcsapi_xxxxxxxxxxxxxxxx
 ```
 
 The **master key** is generated on first launch and grants access to admin endpoints (`/api/admin/*`) and the dashboard (`/admin`). It also has wildcard permissions for all data endpoints.
+
+### Disabling authentication
+
+If a reverse proxy already handles auth (basic auth, OIDC/forward-auth, etc.), set `auth.enabled` to `false` in the config:
+
+```json
+{ "auth": { "enabled": false } }
+```
+
+This disables **all** authentication, including the admin endpoints — the reverse proxy becomes the only trust boundary. Only do this when bound to `127.0.0.1` behind a proxy that enforces access control. The mod logs a warning on startup (louder if the bind address is not loopback). You can also toggle it live from the dashboard (**Settings → Require API Key**), no restart required.
 
 ### Permissions
 
@@ -162,3 +173,4 @@ Built-in web dashboard at `/admin` (requires master key).
 - Master key stored separately from API keys
 - For remote access, use a reverse proxy (nginx, Caddy) with HTTPS/TLS
 - Create API keys with minimal permissions needed for each use case
+- Only disable authentication when bound to `127.0.0.1` behind a trusted reverse proxy that enforces auth

@@ -30,7 +30,7 @@
   <div id="app" class="app-layout hidden">
     <aside class="sidebar">
       <div class="sidebar-header">
-        <span class="dot"></span>
+        <img class="sidebar-logo" src="favicon.png" alt="MCRestAPI">
         <h2>MCRestAPI</h2>
       </div>
       <nav class="sidebar-nav">
@@ -188,6 +188,16 @@
               </div>
               <label class="toggle">
                 <input type="checkbox" id="swagger-toggle">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="toggle-row">
+              <div>
+                <div class="toggle-label">Require API Key</div>
+                <div class="toggle-desc">When off, ALL endpoints (including admin) are open. Only disable this behind a reverse proxy that handles authentication.</div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="auth-toggle">
                 <span class="toggle-slider"></span>
               </label>
             </div>

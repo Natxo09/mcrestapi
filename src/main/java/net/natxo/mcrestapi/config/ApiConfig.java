@@ -27,6 +27,7 @@ public class ApiConfig {
 	private int maxConnections = 50;
 	private boolean swagger = true;
 	private String masterKeyHash = "";
+	private AuthConfig auth = new AuthConfig();
 	private CorsConfig cors = new CorsConfig();
 	private List<ApiKey> keys = new ArrayList<>();
 
@@ -61,6 +62,9 @@ public class ApiConfig {
 			}
 			if (config.cors == null) {
 				config.cors = new CorsConfig();
+			}
+			if (config.auth == null) {
+				config.auth = new AuthConfig();
 			}
 
 			MCRestAPI.LOGGER.info("[MCRestAPI] Config loaded from {}", file);
@@ -213,6 +217,16 @@ public class ApiConfig {
 		}
 	}
 
+	// --- Auth ---
+
+	public AuthConfig getAuth() {
+		return auth;
+	}
+
+	public boolean isAuthEnabled() {
+		return auth.isEnabled();
+	}
+
 	// --- CORS ---
 
 	public CorsConfig getCors() {
@@ -239,6 +253,22 @@ public class ApiConfig {
 
 	public void setSwaggerEnabled(boolean swagger) {
 		this.swagger = swagger;
+	}
+
+	// --- Auth config inner class ---
+
+	public static class AuthConfig {
+		// volatile: the flag is read by request-handling virtual threads and may be
+		// flipped live from the admin settings endpoint on a different thread.
+		private volatile boolean enabled = true;
+
+		public boolean isEnabled() {
+			return enabled;
+		}
+
+		public void setEnabled(boolean enabled) {
+			this.enabled = enabled;
+		}
 	}
 
 	// --- CORS config inner class ---

@@ -38,6 +38,7 @@ public class SettingsAdminEndpoint implements HttpHandler {
 		response.put("bind_address", config.getBindAddress());
 		response.put("max_connections", config.getMaxConnections());
 		response.put("swagger_enabled", config.isSwaggerEnabled());
+		response.put("auth_enabled", config.isAuthEnabled());
 		HttpUtil.sendJson(exchange, 200, GSON.toJson(response));
 	}
 
@@ -47,6 +48,10 @@ public class SettingsAdminEndpoint implements HttpHandler {
 
 		if (json.has("swagger_enabled")) {
 			config.setSwaggerEnabled(json.get("swagger_enabled").getAsBoolean());
+		}
+
+		if (json.has("auth_enabled")) {
+			config.getAuth().setEnabled(json.get("auth_enabled").getAsBoolean());
 		}
 
 		config.save();
