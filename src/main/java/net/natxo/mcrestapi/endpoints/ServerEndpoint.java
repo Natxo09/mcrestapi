@@ -152,7 +152,7 @@ public class ServerEndpoint implements HttpHandler {
 
 		Map<String, Object> properties = new LinkedHashMap<>();
 		properties.put("gamemode", props.gameMode.get().getName());
-		properties.put("difficulty", props.difficulty.get().getKey());
+		properties.put("difficulty", props.difficulty.get().getSerializedName());
 		properties.put("hardcore", props.hardcore);
 		properties.put("allow_flight", props.allowFlight.get());
 		properties.put("whitelist", props.whiteList.get());
