@@ -70,11 +70,11 @@
   text-overflow: ellipsis;
 }
 
-.sidebar-header .dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--accent);
+.sidebar-header .sidebar-logo {
+  width: 26px;
+  height: 26px;
+  object-fit: cover;
+  border-radius: 6px;
   flex-shrink: 0;
 }
 
