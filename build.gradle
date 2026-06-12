@@ -83,7 +83,7 @@ modrinth {
 	versionNumber = "${project.mod_version}+${project.minecraft_version}"
 	versionType = "release"
 	uploadFile = jar
-	gameVersions = ["26.1.2"]
+	gameVersions = ["26.1", "26.1.1", "26.1.2"]
 	loaders = ["fabric"]
 	changelog = System.getenv("CHANGELOG") ?: ""
 	syncBodyFrom = rootProject.file("MODRINTH_README.md").text
