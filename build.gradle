@@ -79,7 +79,8 @@ file('.env').with { envFile ->
 modrinth {
 	token = System.getenv("MODRINTH_TOKEN") ?: System.getProperty("MODRINTH_TOKEN")
 	projectId = "XZCgCz7D"
-	versionNumber = project.mod_version
+	// MC version is appended so 1.21.11 and 26.1 releases stay unique on Modrinth (e.g. 1.2.1+1.21.11)
+	versionNumber = "${project.mod_version}+${project.minecraft_version}"
 	versionType = "release"
 	uploadFile = remapJar
 	gameVersions = ["1.21.11"]
