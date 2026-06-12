@@ -98,12 +98,12 @@ public class WorldEndpoint implements HttpHandler {
 
 		Map<String, Object> time = new LinkedHashMap<>();
 		time.put("game_time", levelData.getGameTime());
-		time.put("day_time", levelData.getDayTime());
-		time.put("day_count", overworld.getDayCount());
+		time.put("day_time", overworld.getOverworldClockTime());
+		time.put("day_count", overworld.getOverworldClockTime() / 24000L);
 
 		Map<String, Object> weather = new LinkedHashMap<>();
-		weather.put("raining", levelData.isRaining());
-		weather.put("thundering", levelData.isThundering());
+		weather.put("raining", overworld.isRaining());
+		weather.put("thundering", overworld.isThundering());
 
 		Map<String, Object> spawn = new LinkedHashMap<>();
 		spawn.put("x", spawnPos.getX());
@@ -114,7 +114,7 @@ public class WorldEndpoint implements HttpHandler {
 		global.put("seed", overworld.getSeed());
 		global.put("time", time);
 		global.put("weather", weather);
-		global.put("difficulty", levelData.getDifficulty().getKey());
+		global.put("difficulty", levelData.getDifficulty().getSerializedName());
 		global.put("difficulty_locked", levelData.isDifficultyLocked());
 		global.put("hardcore", levelData.isHardcore());
 		global.put("pvp", overworld.isPvpAllowed());

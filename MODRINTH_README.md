@@ -1,6 +1,6 @@
 # MCRestAPI
 
-A Fabric mod for Minecraft 1.21.11 that exposes a REST API and real-time event stream (SSE) for monitoring and controlling dedicated Minecraft servers. Built on top of the JDK's built-in HTTP server with zero external dependencies.
+A Fabric mod that exposes a REST API and real-time event stream (SSE) for monitoring and controlling dedicated Minecraft servers. Built on top of the JDK's built-in HTTP server with zero external dependencies. Available for **Minecraft 1.21.11 and 26.1+** — download the file that matches your version.
 
 ---
 
@@ -18,19 +18,21 @@ A Fabric mod for Minecraft 1.21.11 that exposes a REST API and real-time event s
 - CORS configuration with per-origin allowlist
 - API keys hashed with PBKDF2-SHA256 (never stored in plain text)
 - Zero external dependencies (uses JDK built-in HTTP server)
-- Virtual threads (Java 21) for lightweight concurrency
+- Virtual threads for lightweight concurrency
 - Server-side only (does not run on clients)
 
 ---
 
 ## Requirements
 
-| Component      | Version         |
-|----------------|-----------------|
-| Minecraft      | 1.21.11         |
-| Fabric Loader  | >= 0.18.4       |
-| Fabric API     | any             |
-| Java           | >= 21           |
+| Component     | 1.21.11 line | 26.1 line  |
+|---------------|--------------|------------|
+| Minecraft     | 1.21.11      | 26.1.x     |
+| Java          | >= 21        | >= 25      |
+| Fabric Loader | >= 0.18.4    | >= 0.19.3  |
+| Fabric API    | any          | any        |
+
+Each release on Modrinth is tagged with its supported Minecraft version — install the one matching your server.
 
 ---
 
