@@ -2,17 +2,18 @@
 
 ## Project Overview
 
-Fabric mod for Minecraft 1.21.11 (dedicated server only) that exposes a REST API + WebSocket for monitoring and controlling Minecraft servers. Uses `com.sun.net.httpserver` from the JDK (zero external dependencies for HTTP).
+Fabric mod for Minecraft 26.1.2 (dedicated server only) that exposes a REST API + WebSocket for monitoring and controlling Minecraft servers. Uses `com.sun.net.httpserver` from the JDK (zero external dependencies for HTTP).
 
 ## Tech Stack
 
 | Component       | Version                    |
 |-----------------|----------------------------|
-| Minecraft       | 1.21.11                    |
-| Fabric Loader   | 0.18.4                     |
-| Fabric Loom     | 1.15-SNAPSHOT              |
-| Fabric API      | 0.141.3+1.21.11            |
-| Java            | 21                         |
+| Minecraft       | 26.1.2                     |
+| Fabric Loader   | 0.19.3                     |
+| Fabric Loom     | 1.17.11                    |
+| Fabric API      | 0.151.0+26.1.2             |
+| Java            | 25                         |
+| Gradle          | 9.5.1                      |
 | Mappings        | Mojang official             |
 
 ## Project Structure
@@ -37,34 +38,38 @@ src/main/java/net/natxo/mcrestapi/
     └── PlayerTracker.java      # Thread-safe player data snapshots
 ```
 
-## Inspecting Minecraft API (Mojang Mappings)
+## Inspecting Minecraft API (deobfuscated)
 
-Since the project uses Mojang official mappings, you can inspect any Minecraft class using:
+Minecraft 26.1+ ships **deobfuscated** — official class/method names with parameter names, no mappings. Inspect any Minecraft class directly from the Loom-provided merged jar:
 
 ```bash
-# Full class inspection
-javap -p -classpath .gradle/loom-cache/minecraftMaven/net/minecraft/minecraft-merged-6dd721cd7d/1.21.11-loom.mappings.1_21_11.layered+hash.2198-v2/minecraft-merged-6dd721cd7d-1.21.11-loom.mappings.1_21_11.layered+hash.2198-v2.jar <fully.qualified.ClassName>
+# Full class inspection (replace 26.1.2 with the target MC version)
+javap -p -classpath ~/.gradle/caches/fabric-loom/26.1.2/minecraft-merged.jar <fully.qualified.ClassName>
 
-# Search for specific methods
-javap -p -classpath .gradle/loom-cache/minecraftMaven/net/minecraft/minecraft-merged-6dd721cd7d/1.21.11-loom.mappings.1_21_11.layered+hash.2198-v2/minecraft-merged-6dd721cd7d-1.21.11-loom.mappings.1_21_11.layered+hash.2198-v2.jar <ClassName> 2>&1 | grep -i "methodName"
+# Search for a specific method
+javap -p -classpath ~/.gradle/caches/fabric-loom/26.1.2/minecraft-merged.jar <ClassName> 2>&1 | grep -i "methodName"
 
 # List classes in the jar
-jar tf .gradle/loom-cache/minecraftMaven/net/minecraft/minecraft-merged-6dd721cd7d/1.21.11-loom.mappings.1_21_11.layered+hash.2198-v2/minecraft-merged-6dd721cd7d-1.21.11-loom.mappings.1_21_11.layered+hash.2198-v2.jar | grep -i "ClassName"
+jar tf ~/.gradle/caches/fabric-loom/26.1.2/minecraft-merged.jar | grep -i "ClassName"
 
-# Authlib (GameProfile, etc.) — uses record-style accessors (name() not getName())
-javap -p -classpath ~/.gradle/caches/modules-2/files-2.1/com.mojang/authlib/7.0.61/efee1e6b54e863108576eb3b3ae71144626aaefc/authlib-7.0.61.jar <ClassName>
+# Authlib (GameProfile, etc.) — record-style accessors (name() not getName())
+# locate it with: find ~/.gradle -name 'authlib-*.jar'
 ```
 
-### Key API differences in 1.21.11 Mojang Mappings
+### Key API notes (Minecraft 26.1, official names)
 
-- `GameProfile.name()` not `getName()` (authlib 7.x uses record-style)
+- `GameProfile.name()` not `getName()` (authlib uses record-style)
 - `ResourceKey.identifier()` not `location()`
 - `ServerPlayer.server` is private — use `player.level().getServer()` instead
 - `PlayerList.isOp()` takes `NameAndId`, not `GameProfile` — use `new NameAndId(gameProfile)`
 - `DedicatedServer` has `getProperties()` for server.properties access
 - `Settings.MutableValue` fields use `.get()` to read values
+- `Difficulty.getSerializedName()` not `getKey()` (implements `StringRepresentable`)
+- Weather/time moved off `LevelData`: use `Level.isRaining()` / `isThundering()`; the day time is `Level.getOverworldClockTime()` (26.1 WorldClock), and `getDayCount()` was removed (derive `clockTime / 24000`)
 
 ## Build & Run
+
+Minecraft 26.1 requires **Java 25** — the Gradle JVM itself must run on JDK 25 (set `JAVA_HOME` to a JDK 25 if it isn't your default).
 
 ```bash
 ./gradlew build         # Compile and produce mod jar
@@ -85,7 +90,18 @@ API testing collection in `McRestApi-Bruno/`. Open with Bruno, select the "Local
 - **Minotaur plugin** configured in `build.gradle` for automated publishing
 - **Modrinth token** stored in `.env` locally and in GitHub secret `MODRINTH_TOKEN`
 - **CI/CD:** `.github/workflows/publish.yml` triggers on tag push (`v*`)
-- **Two READMEs:** `README.md` (GitHub, full) and `MODRINTH_README.md` (Modrinth, compact)
+- **Two READMEs:** `README.md` (GitHub, full, **per-branch**) and `MODRINTH_README.md` (the **single shared** Modrinth description — keep it version-agnostic)
+
+### Minecraft version support (branches)
+
+The mod supports multiple Minecraft versions in parallel — **one branch per MC line**:
+
+- `main` always tracks the **latest** Minecraft version (currently `26.1.2`). Older lines live on a branch named by MC version (e.g. `1.21.11`) and keep getting back-support.
+- New MC version → branch off `main`, port it, merge into `main` via PR; the previous version stays on its own branch.
+- Per branch, set the versions in `gradle.properties`, `fabric.mod.json`, and `gameVersions` in `build.gradle`.
+- Modrinth versions stay unique across lines via `versionNumber = "${mod_version}+${minecraft_version}"` (e.g. `2.0.0+26.1.2`). Keep `mod_version` ranges disjoint per line (26.1 → `2.x`, 1.21.11 → `1.x`) so git tags never collide.
+- `MODRINTH_README.md` is the shared Modrinth body across **every** version — never pin it to a single MC version. The GitHub `README.md` is per-branch and may be version-specific.
+- Minecraft 26.1+ needs **Java 25**; the CI workflows already run on Java 25.
 
 ### How to publish a new version
 

@@ -1,6 +1,6 @@
 # MCRestAPI
 
-A Fabric mod for Minecraft 1.21.11 that exposes a REST API and real-time event stream (SSE) for monitoring and controlling dedicated Minecraft servers. Built on top of the JDK's built-in HTTP server with zero external dependencies.
+A Fabric mod for Minecraft 26.1.2 that exposes a REST API and real-time event stream (SSE) for monitoring and controlling dedicated Minecraft servers. Built on top of the JDK's built-in HTTP server with zero external dependencies.
 
 [![Modrinth Downloads](https://img.shields.io/modrinth/dt/XZCgCz7D?label=Modrinth%20Downloads)](https://modrinth.com/mod/mcrestapi)
 [![Modrinth Version](https://img.shields.io/modrinth/v/XZCgCz7D?label=Latest%20Version)](https://modrinth.com/mod/mcrestapi/versions)
@@ -52,7 +52,7 @@ A Fabric mod for Minecraft 1.21.11 that exposes a REST API and real-time event s
 - CORS configuration with per-origin allowlist
 - API keys hashed with PBKDF2-SHA256 (never stored in plain text)
 - Zero external dependencies (uses JDK built-in HTTP server)
-- Virtual threads (Java 21) for lightweight concurrency
+- Virtual threads (Java 25) for lightweight concurrency
 - Server-side only (does not run on clients)
 
 ---
@@ -61,10 +61,10 @@ A Fabric mod for Minecraft 1.21.11 that exposes a REST API and real-time event s
 
 | Component      | Version         |
 |----------------|-----------------|
-| Minecraft      | 1.21.11         |
+| Minecraft      | 26.1.2          |
 | Fabric Loader  | >= 0.18.4       |
 | Fabric API     | any             |
-| Java           | >= 21           |
+| Java           | >= 25           |
 
 ---
 
@@ -231,7 +231,7 @@ curl -H "Authorization: Bearer mcsapi_xxx" http://localhost:8080/api/server
 
 ```json
 {
-  "version": "1.21.11",
+  "version": "26.1.2",
   "motd": "A Minecraft Server",
   "server_port": 25565,
   "online_mode": true,
