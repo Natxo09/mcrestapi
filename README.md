@@ -18,6 +18,7 @@ A Fabric mod for Minecraft 1.21.11 that exposes a REST API and real-time event s
 - [Authentication](#authentication)
   - [API Keys](#api-keys)
   - [Master Key](#master-key)
+  - [Disabling Authentication](#disabling-authentication-reverse-proxy-setups)
   - [Permissions](#permissions)
 - [API Endpoints](#api-endpoints)
   - [Public Endpoints](#public-endpoints-no-authentication)
@@ -100,6 +101,7 @@ The configuration file is located at `config/mcrestapi.json` and is generated au
 | `maxConnections` | integer | `50`          | Maximum concurrent HTTP connections               |
 | `swagger`        | boolean | `true`        | Enable/disable Swagger UI and OpenAPI spec        |
 | `masterKeyHash`  | string  | (generated)   | PBKDF2 hash of the master key                     |
+| `auth`           | object  | (enabled)     | Authentication settings. Set `auth.enabled` to `false` to delegate auth to a reverse proxy |
 | `keys`           | array   | (generated)   | List of API keys with permissions                 |
 | `cors`           | object  | (disabled)    | CORS configuration                                |
 
@@ -112,6 +114,9 @@ The configuration file is located at `config/mcrestapi.json` and is generated au
   "maxConnections": 50,
   "swagger": true,
   "masterKeyHash": "pbkdf2$...",
+  "auth": {
+    "enabled": true
+  },
   "keys": [
     {
       "id": "dk_a1b2c3d4",
@@ -151,6 +156,28 @@ Each API key has a name, a set of permissions, and a unique ID. Keys are created
 The master key is a special key generated on first launch that grants access to the admin endpoints (`/api/admin/*`) and the admin dashboard (`/admin`). It also has wildcard permissions for all data endpoints.
 
 The master key is separate from API keys and cannot be managed through the admin interface.
+
+### Disabling Authentication (reverse proxy setups)
+
+If you already terminate authentication at a reverse proxy (e.g. HTTP basic auth, OIDC/forward-auth via Authelia, Authentik, oauth2-proxy, etc.), the built-in API key check is redundant. You can turn it off:
+
+```json
+{
+  "auth": {
+    "enabled": false
+  }
+}
+```
+
+When `auth.enabled` is `false`:
+
+- **All** endpoints become open, including the admin/key-management endpoints (`/api/admin/*`) and the admin dashboard. The reverse proxy becomes the single trust boundary — there is no second layer behind it.
+- The mod logs a prominent warning on startup. If `bindAddress` is **not** loopback (e.g. `0.0.0.0`) it logs a louder warning, because the API is then reachable without any authentication.
+- Existing clients that still send `Authorization: Bearer ...` keep working — the token is simply ignored.
+
+**Safe pattern:** bind to `127.0.0.1` (the default) and let only your reverse proxy reach the port, with the proxy enforcing authentication. Never expose an unauthenticated instance directly to the internet.
+
+You can toggle this at runtime from the admin dashboard (**Settings → Require API Key**) — the change applies immediately, no restart required. Existing installs that don't have the `auth` block in their config yet can either add the snippet above manually or just flip the toggle once (which writes the block to `config/mcrestapi.json`).
 
 ### Permissions
 
@@ -652,6 +679,7 @@ The master key is generated on first launch and its hash is stored separately fr
 - Create API keys with minimal permissions needed for each use case
 - Rotate API keys periodically by revoking and creating new ones
 - Enable CORS only if browser-based clients need access, and restrict origins to specific domains
+- Only [disable authentication](#disabling-authentication-reverse-proxy-setups) when the API is bound to `127.0.0.1` behind a trusted reverse proxy that enforces auth — never expose an unauthenticated instance directly
 
 ---
 

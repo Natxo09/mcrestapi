@@ -19,6 +19,13 @@ public class MasterKeyMiddleware implements HttpHandler {
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
+		// When auth is disabled the reverse proxy is the trust boundary, so admin
+		// endpoints are open too (consistent with the regular API layer).
+		if (!config.isAuthEnabled()) {
+			next.handle(exchange);
+			return;
+		}
+
 		String authHeader = exchange.getRequestHeaders().getFirst("Authorization");
 
 		if (authHeader == null || !authHeader.startsWith("Bearer ")) {

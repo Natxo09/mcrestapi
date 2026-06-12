@@ -22,6 +22,13 @@ public class AuthMiddleware implements HttpHandler {
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
+		// Auth can be delegated to a reverse proxy: when disabled, skip all token checks.
+		// Read live on every request so the admin toggle takes effect without a restart.
+		if (!config.isAuthEnabled()) {
+			next.handle(exchange);
+			return;
+		}
+
 		String rawKey = extractBearerToken(exchange);
 
 		if (rawKey == null) {

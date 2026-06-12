@@ -31,8 +31,10 @@ public class ApiServer {
 
 	private final HttpServer httpServer;
 	private final boolean swaggerEnabled;
+	private final ApiConfig config;
 
 	public ApiServer(ApiConfig config, TpsCollector tpsCollector, PlayerTracker playerTracker, EventCollector eventCollector, DedicatedServer server) throws IOException {
+		this.config = config;
 		InetSocketAddress address = new InetSocketAddress(config.getBindAddress(), config.getPort());
 		this.httpServer = HttpServer.create(address, config.getMaxConnections());
 		this.httpServer.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
@@ -72,6 +74,31 @@ public class ApiServer {
 			MCRestAPI.LOGGER.info("[MCRestAPI] Swagger UI at http://{}:{}/api/docs",
 					httpServer.getAddress().getHostString(), httpServer.getAddress().getPort());
 		}
+		logSecurityWarnings();
+	}
+
+	private void logSecurityWarnings() {
+		if (config.isAuthEnabled()) {
+			return;
+		}
+
+		String bind = config.getBindAddress();
+		MCRestAPI.LOGGER.warn("[MCRestAPI] ============================================================");
+		MCRestAPI.LOGGER.warn("[MCRestAPI] AUTHENTICATION IS DISABLED (auth.enabled = false)");
+		MCRestAPI.LOGGER.warn("[MCRestAPI] All endpoints, including admin/key management, are OPEN.");
+		if (isLoopback(bind)) {
+			MCRestAPI.LOGGER.warn("[MCRestAPI] Bound to {} (loopback). Make sure your reverse proxy", bind);
+			MCRestAPI.LOGGER.warn("[MCRestAPI] enforces authentication (basic auth, OIDC, etc.).");
+		} else {
+			MCRestAPI.LOGGER.warn("[MCRestAPI] Bind address is {} (NOT loopback): the API is exposed", bind);
+			MCRestAPI.LOGGER.warn("[MCRestAPI] WITHOUT authentication. Ensure a reverse proxy or firewall");
+			MCRestAPI.LOGGER.warn("[MCRestAPI] restricts access, or anyone who reaches this port has full control.");
+		}
+		MCRestAPI.LOGGER.warn("[MCRestAPI] ============================================================");
+	}
+
+	private static boolean isLoopback(String addr) {
+		return "127.0.0.1".equals(addr) || "::1".equals(addr) || "localhost".equalsIgnoreCase(addr);
 	}
 
 	public void stop() {

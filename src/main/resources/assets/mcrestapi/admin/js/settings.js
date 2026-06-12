@@ -21,12 +21,44 @@ var SettingsPage = (function () {
         }
       });
     }
+
+    var authToggle = document.getElementById('auth-toggle');
+    if (authToggle && !authToggle._bound) {
+      authToggle._bound = true;
+      authToggle.addEventListener('change', async function () {
+        if (!authToggle.checked) {
+          var ok = confirm(
+            'Disable API key authentication?\n\n' +
+            'ALL endpoints, including admin and key management, will be OPEN to anyone ' +
+            'who can reach this server. Only do this if a reverse proxy or firewall ' +
+            'enforces access control.'
+          );
+          if (!ok) {
+            authToggle.checked = true;
+            return;
+          }
+        }
+        try {
+          await Api.request('/api/admin/settings', 'PUT', { auth_enabled: authToggle.checked });
+          Utils.toast(
+            authToggle.checked
+              ? 'Authentication enabled — API key now required'
+              : 'Authentication disabled — all endpoints are open',
+            authToggle.checked ? 'success' : 'error'
+          );
+        } catch (e) {
+          authToggle.checked = !authToggle.checked;
+          Utils.toast('Failed to update settings: ' + e.message, 'error');
+        }
+      });
+    }
   }
 
   async function loadSettings() {
     try {
       var data = await Api.request('/api/admin/settings', 'GET');
       document.getElementById('swagger-toggle').checked = data.swagger_enabled;
+      document.getElementById('auth-toggle').checked = data.auth_enabled;
 
       document.getElementById('page-badge').textContent = '';
 
